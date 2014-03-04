@@ -1,0 +1,19 @@
+---
+- hosts: web
+#  vars:
+#    http_port: 80
+#    max_clients: 200
+  remote_user: root
+  tasks:
+    - name: upgrade nginx
+      yum: pkg=nginx state=latest
+#    - name: write the nginx config file
+#      template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+      notify:
+      - restart nginx
+    - name: ensure nginx is running
+      service: name=nginx state=started
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+

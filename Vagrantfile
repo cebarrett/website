@@ -1,9 +1,16 @@
 Vagrant.configure("2") do |config|
-    # http://files.vagrantup.com/precise64.box
-    config.vm.box = "precise64"
-    config.vm.network :private_network, ip: "192.168.111.222"
+    config.vm.box = "chef/fedora-19"
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "ansible/playbook.yml"
+        ansible.verbose = 'vvvv'
+        ansible.extra_vars = {
+            ansible_ssh_user: "vagrant"
+        }
+        ansible.raw_arguments = ['--user', 'vagrant', '--private-key', '~/.vagrant.d/insecure_private_key']
+        ansible.raw_ssh_args = ['-o User=vagrant']
+        ansible.sudo = true
+        ansible.sudo_user = "root"
+        ansible.host_key_checking = false
     end
 end
 

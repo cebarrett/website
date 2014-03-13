@@ -3,7 +3,6 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: "10.10.10.10"
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "ansible/playbook.yml"
-        ansible.verbose = 'vvvv'
         ansible.extra_vars = {
             ansible_ssh_user: "vagrant"
         }

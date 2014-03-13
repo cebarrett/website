@@ -1,14 +1,9 @@
 ---
 - hosts: all
-#  vars:
-#    http_port: 80
-#    max_clients: 200
   remote_user: root
   tasks:
     - name: upgrade nginx
-      yum: pkg=nginx state=latest
-#    - name: write the nginx config file
-#      template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+      apt: pkg=nginx state=latest 
       notify:
       - restart nginx
     - name: ensure nginx is running

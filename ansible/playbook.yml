@@ -2,14 +2,32 @@
 - hosts: all
   remote_user: root
   tasks:
+    - name: update apt
+      apt: update_cache=yes cache_valid_time=3600
+#    - name: upgrade packages
+#      apt: upgrade=yes
+    - name: install dependencies
+      apt: pkg={{item}} state=latest
+      with_items:
+      - zip
+      - unzip
+      - libjansi-java
     - name: configure iptables
       template: src=templates/iptables.j2 dest=/etc/iptables.rules
       notify:
       - restore iptables
     - name: upgrade nginx
-      apt: pkg=nginx state=latest 
+      apt: pkg=nginx state=latest
       notify:
       - restart nginx
+    - name: upgrade java
+      apt: pkg=openjdk-7-jdk state=latest
+    - name: download scala
+      get_url: url=http://www.scala-lang.org/files/archive/scala-2.10.3.deb dest=~/scala-2.10.3.deb
+    - name: install scala
+      shell: dpkg -E -i ~/scala-2.10.3.deb
+    - name: download typesafe activator
+      get_url: url=http://downloads.typesafe.com/typesafe-activator/1.0.13/typesafe-activator-1.0.13.zip dest=~/typesafe-activator-1.0.13.zip
     - name: copy static files
       copy: src=../www dest=/var owner=www-data group=www-data
     - name: configure nginx

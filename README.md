@@ -1,6 +1,5 @@
 TODO
 ----
-* install typesafe activator
 * scala/play http endpoint that echoes remote ip
   * write code
   * nginx.conf mapping it to /api

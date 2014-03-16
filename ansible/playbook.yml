@@ -11,6 +11,7 @@
       with_items:
       - zip
       - unzip
+      - openjdk-7-jdk
       - libjansi-java
     - name: configure iptables
       template: src=templates/iptables.j2 dest=/etc/iptables.rules
@@ -24,14 +25,16 @@
       apt: pkg=nginx state=latest
       notify:
       - restart nginx
-    - name: upgrade java
-      apt: pkg=openjdk-7-jdk state=latest
     - name: download scala
       get_url: url=http://www.scala-lang.org/files/archive/scala-2.10.3.deb dest=~/scala-2.10.3.deb
     - name: install scala
       shell: dpkg -E -i ~/scala-2.10.3.deb
     - name: download typesafe activator
       get_url: url=http://downloads.typesafe.com/typesafe-activator/1.0.13/typesafe-activator-1.0.13.zip dest=~/typesafe-activator-1.0.13.zip
+    - name: unzip typesafe activator
+      shell: unzip -d /opt/ ~/typesafe-activator-1.0.13.zip
+    - name: symlink typesafe activator
+      file: src=/opt/activator-1.0.13/activator dest=/usr/local/bin/activator owner=root group=root state=link
     - name: copy static files
       copy: src=../www dest=/var owner=www-data group=www-data
     - name: configure nginx

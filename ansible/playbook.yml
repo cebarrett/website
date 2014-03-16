@@ -4,8 +4,8 @@
   tasks:
     - name: update apt
       apt: update_cache=yes cache_valid_time=3600
-#    - name: upgrade packages
-#      apt: upgrade=yes
+    - name: upgrade packages
+      apt: upgrade=yes
     - name: install dependencies
       apt: pkg={{item}} state=latest
       with_items:
@@ -16,6 +16,10 @@
       template: src=templates/iptables.j2 dest=/etc/iptables.rules
       notify:
       - restore iptables
+    - name: install fail2ban
+      apt: pkg=fail2ban state=latest
+      notify:
+      - restart fail2ban
     - name: upgrade nginx
       apt: pkg=nginx state=latest
       notify:
@@ -41,4 +45,6 @@
       service: name=nginx state=restarted
     - name: restore iptables
       shell: iptables-restore < /etc/iptables.rules
+    - name: restart fail2ban
+      service: name=fail2ban state=restarted
 

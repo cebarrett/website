@@ -1,9 +1,8 @@
 TODO
 ----
-* scala/play http endpoint that echoes remote ip
+* http endpoint that echoes remote ip
   * write code
   * nginx.conf mapping it to /api
-  * build code to a jar with dependencies
   * ansible task/handler to restart
   * ansible task/handler to ensure it is running
 * add endpoint to html page

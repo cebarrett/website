@@ -9,6 +9,7 @@
       with_items:
       - zip
       - unzip
+      - ruby2.0
     - name: configure iptables
       template: src=templates/iptables.j2 dest=/etc/iptables.rules
       notify:
@@ -35,6 +36,16 @@
       gem: name={{item}} state=latest user_install=no
       with_items:
       - sinatra
+    - name: copy api
+      copy: src=../api dest=/opt owner=root group=root
+      notify:
+      - restart api
+    - name: install api initscript
+      template: src=templates/initscript.j2 dest=/etc/init.d/api owner=root mode=0755
+    - name: configure api initscript
+      shell: update-rc.d api defaults
+    - name: ensure api is running
+      service: name=api state=started
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted
@@ -42,4 +53,6 @@
       shell: iptables-restore < /etc/iptables.rules
     - name: restart fail2ban
       service: name=fail2ban state=restarted
+    - name: restart api
+      service: name=api state=restarted
 

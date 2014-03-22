@@ -10,4 +10,5 @@ TODO
 * measure memory usage during benchmark
 * db
 * mobile app
+* disable ssh password login
 

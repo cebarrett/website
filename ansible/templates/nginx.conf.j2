@@ -14,13 +14,14 @@ http {
 
         location /api {
             proxy_pass http://localhost:4567/;
+            proxy_set_header X-Real-IP $remote_addr;
         }
 
         location / {
             root /var/www;
         }
     }
-    
+
     sendfile on;
     tcp_nopush on;
     tcp_nodelay on;

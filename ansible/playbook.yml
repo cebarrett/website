@@ -36,12 +36,16 @@
       gem: name={{item}} state=latest user_install=no
       with_items:
       - sinatra
+    - name: create api pid directory
+      file: path=/opt/api/pid state=directory owner=root group=root mode=770
     - name: copy api
       copy: src=../api dest=/opt owner=root group=root
       notify:
       - restart api
     - name: install api initscript
       template: src=templates/initscript.j2 dest=/etc/init.d/api owner=root mode=0755
+      notify:
+      - restart api
     - name: configure api initscript
       shell: update-rc.d api defaults
     - name: ensure api is running

@@ -1,10 +1,6 @@
 TODO
 ----
-* http endpoint that echoes remote ip
-  * write code
-  * nginx.conf mapping it to /api
-  * ansible task/handler to restart
-  * ansible task/handler to ensure it is running
+* fix http endpoint that echoes remote ip - always returns 127.0.0.1
 * add endpoint to html page
 * benchmark requests/sec
 * measure memory usage during benchmark

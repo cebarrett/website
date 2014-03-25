@@ -3,6 +3,6 @@ require 'rubygems'
 require 'sinatra'
 
 get '/' do
-  "Hello world"
+  request.ip
 end
 

@@ -1,6 +1,6 @@
 TODO
 ----
-* fix http endpoint that echoes remote ip - always returns 127.0.0.1
+* fix incorrect pid written to pid file
 * hide sinatra error page
 * add endpoint to html page
 * benchmark requests/sec

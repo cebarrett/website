@@ -2,52 +2,55 @@
 - hosts: all
   remote_user: root
   tasks:
-    - name: update apt
-      apt: update_cache=yes cache_valid_time=3600
     - name: install dependencies
-      apt: pkg={{item}} state=latest
+      yum: name={{item}} state=latest
       with_items:
       - zip
       - unzip
-      - ruby2.0
+      - ruby
+      - ruby-devel
+      - fail2ban
     - name: configure iptables
       template: src=templates/iptables.j2 dest=/etc/iptables.rules
       notify:
       - restore iptables
-    - name: install fail2ban
-      apt: pkg=fail2ban state=latest
       notify:
       - restart fail2ban
     - name: upgrade nginx
-      apt: pkg=nginx state=latest
+      yum: name=nginx state=latest
       notify:
       - restart nginx
-    - name: upgrade packages
-      apt: upgrade=yes
+    - name: create www-data group
+      group: name=www-data state=present
+    - name: create www-data user
+      user: name=www-data group=www-data createhome=no
     - name: copy static files
       copy: src=../www dest=/var owner=www-data group=www-data
     - name: configure nginx
       template: src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root mode=0644
       notify:
       - restart nginx
+    - name: start nginx at boot
+      service: name=nginx enabled=yes
     - name: ensure nginx is running
       service: name=nginx state=started
     - name: install gems
       gem: name={{item}} state=latest user_install=no
       with_items:
+      - unicorn
       - sinatra
     - name: create api pid directory
       file: path=/opt/api/pid state=directory owner=root group=root mode=770
     - name: copy api
-      copy: src=../api dest=/opt owner=root group=root
+      copy: src=../api dest=/opt owner=root group=root mode=0755
       notify:
       - restart api
     - name: install api initscript
       template: src=templates/initscript.j2 dest=/etc/init.d/api owner=root mode=0755
       notify:
       - restart api
-    - name: configure api initscript
-      shell: update-rc.d api defaults
+    - name: start api when server boots
+      service: name=api enabled=yes
     - name: ensure api is running
       service: name=api state=started
   handlers:

@@ -1,11 +1,6 @@
 /** @jsx React.DOM */
 (function($) {
 
-    var mockData = {
-        "X_REAL_IP": "1.1.1.1",
-        "User-Agent": "MSIE 6"
-    };
-
     var TableRowItem = React.createClass({
         render: function() {
             return (
@@ -18,7 +13,7 @@
         render: function() {
             var tableRowItems = [];
             for (i in this.props.data) {
-                var item = <TableRowItem key={i} value={this.props.data[i]} />;
+                var item = <TableRowItem key={i} value={String(this.props.data[i])} />;
                 tableRowItems.push(item);
             }
             return (
@@ -33,9 +28,13 @@
         }
     });
 
-    React.renderComponent(
-        <Application data={mockData} />,
-        $("#container")[0]
-    );
+    // TODO: see "fetching from the server" here:
+    // http://facebook.github.io/react/docs/tutorial.html
+    $.getJSON("api", function(data) {
+        React.renderComponent(
+            <Application data={data} />,
+            $("#container")[0]
+        );
+    });
 
 })(jQuery);

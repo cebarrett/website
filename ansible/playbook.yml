@@ -2,9 +2,13 @@
 - hosts: all
   remote_user: root
   tasks:
+#    - name: disable httpd (enabled by default on Wable)
+#      service: name=httpd enabled=no state=stopped
     - name: install dependencies
       yum: name={{item}} state=latest
       with_items:
+      - gcc
+      - make
       - zip
       - unzip
       - ruby
@@ -39,6 +43,7 @@
       with_items:
       - unicorn
       - sinatra
+      - sinatra-contrib
     - name: create api pid directory
       file: path=/opt/api/pid state=directory owner=root group=root mode=770
     - name: copy api

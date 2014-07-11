@@ -3,14 +3,15 @@
 require 'rubygems'
 require 'rack'
 require 'sinatra'
+require 'sinatra/json'
 
 Process.daemon()
 
 get '/' do
   headers = request.env
-    .collect {|pair| [ Rack::Utils.escape_html(pair[0]), Rack::Utils.escape_html(pair[1]) ]}
-    .collect {|pair| pair.join(": ") << "<br>"}
-    .sort
-  [200, {'Content-Type' => 'text/html'}, headers]
+    .reduce({}) do |accu, pair|
+        accu[pair[0]] = pair[1]
+        accu
+    end
+  json(headers)
 end
-

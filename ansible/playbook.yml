@@ -30,6 +30,8 @@
       user: name=www-data group=www-data createhome=no
     - name: create nginx logrotate file
       template: src=templates/etc.logrotate.d.nginx.j2 dest=/etc/logrotate.d/nginx owner=root mode=0644
+    - name: set nginx log folder owner
+      file: path=/var/log/nginx state=directory owner=www-data group=nginx mode=0664
     - name: copy static files
       copy: src=../www dest=/var owner=www-data group=www-data
     - name: configure nginx
